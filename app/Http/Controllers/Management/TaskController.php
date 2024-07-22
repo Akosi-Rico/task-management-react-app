@@ -9,7 +9,7 @@ class TaskController extends Controller
 {
     public function index()
     {
-        return "welcome";
+        return view("modules.main");
     }
 
     public function create()
