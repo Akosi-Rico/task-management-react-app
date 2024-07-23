@@ -10,6 +10,8 @@
   <div id="root"></div>
   <script>
       window.publicImagePath = @json(asset("/"));
+      window.datatableurl = @json(route("load.datatable"));
+      window.storeUrl = @json(route("task.store"));
   </script>
 </body>
 </html>

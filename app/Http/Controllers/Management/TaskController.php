@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Manage\Task;
 class TaskController extends Controller
 {
     public function index()
@@ -17,9 +17,9 @@ class TaskController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        //
+       return Task::createOrUpdateTask(request()->payload);
     }
 
    
@@ -41,5 +41,10 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function loadTable() 
+    {
+        return Task::loadDataTableData();
     }
 }

@@ -18,3 +18,54 @@
     focus:ring-opacity-50
     w-full
 }
+
+.primary-button {
+    @apply
+    bg-blue-700
+    rounded-md
+    px-6
+    py-2
+    text-sm
+    text-slate-50
+    font-sans
+    font-semibold
+    focus:outline-none
+    focus:ring-2
+    focus:ring-blue-800
+    focus:ring-opacity-50
+}
+
+
+.warning-button {
+    @apply
+    bg-orange-700
+    rounded-md
+    px-6
+    py-2
+    mx-1
+    text-sm
+    text-slate-50
+    font-sans
+    font-semibold
+    focus:outline-none
+    focus:ring-2
+    focus:ring-orange-800
+    focus:ring-opacity-50
+}
+
+.danger-button {
+    @apply
+    bg-red-700
+    rounded-md
+    px-6
+    py-2
+    mx-1
+    text-sm
+    text-slate-50
+    font-sans
+    font-semibold
+    focus:outline-none
+    focus:ring-2
+    focus:ring-red-800
+    focus:ring-opacity-50
+}
