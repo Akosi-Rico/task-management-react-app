@@ -12,6 +12,7 @@
       window.publicImagePath = @json(asset("/"));
       window.datatableurl = @json(route("load.datatable"));
       window.storeUrl = @json(route("task.store"));
+      window.destroyTaskUrl = @json(route("task.destroy", ""));
   </script>
 </body>
 </html>

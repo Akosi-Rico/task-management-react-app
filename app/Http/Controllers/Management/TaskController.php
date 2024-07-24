@@ -19,7 +19,7 @@ class TaskController extends Controller
 
     public function store()
     {
-       return Task::createOrUpdateTask(request()->payload);
+      return Task::createOrUpdateTask(request()["payload"]);
     }
 
    
@@ -40,7 +40,7 @@ class TaskController extends Controller
 
     public function destroy(string $id)
     {
-        //
+       return Task::removeTask($id);
     }
 
     public function loadTable() 

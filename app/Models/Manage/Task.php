@@ -43,10 +43,38 @@ class Task extends Model
                 $task->title = $request['title'];
                 $task->content = $request['task'];
                 $task->status_id = $request['status'];
+                $task->user_id = 0;
                 $task->save();
 
             DB::commit();
+            return response([
+                "message" => "Successfully",
+            ], Response::HTTP_OK); 
         } catch (\Throwable $th) {
+            info($th);
+            //return self::loadResponse($th->getMessage(), Response::HTTP_BAD_REQUEST, new JsonOutput);
+        }
+    }
+
+    public static function removeTask($id)
+    {
+        try {
+            DB::beginTransaction();
+                if (empty($id)) {
+                    return false;
+                }
+
+                $task = self::where("id", $id)->first();
+                if (!empty($task)) {
+                    $task->delete();
+                }
+
+            DB::commit();
+            return response([
+                "message" => "Successfully",
+            ], Response::HTTP_OK); 
+        } catch (\Throwable $th) {
+            info($th);
             //return self::loadResponse($th->getMessage(), Response::HTTP_BAD_REQUEST, new JsonOutput);
         }
     }

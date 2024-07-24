@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import Datatable from './datatable.tsx';
+import React, { useState, useEffect } from "react";
 import Axios from "axios";
 interface FormProps {
-    datatableurl: string,
-    storeUrl: string
+    storeUrl: string;
+    currentSequence: (data) => void;
+    taskInfo: {
+        id: number;
+        title: string;
+        content: string;
+        status: string;
+    },
+    removeTaskId: number;
+    destroyTaskUrl: string;
 }
 
-export default function Form({ datatableurl, storeUrl }: FormProps) {
+export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId, destroyTaskUrl }: FormProps) {
     const [id, setId] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [status, setStatus] = useState("");
-    const [sequence, setSequence] =useState(0);
+    const [sequence, setSequence] = useState(0);
+   
 
     const setTitleValue = (event) => {
         setTitle(event.target.value);
@@ -31,22 +39,56 @@ export default function Form({ datatableurl, storeUrl }: FormProps) {
                 id: id,
                 title: title,
                 task: content,
-                status:status
+                status: status
             },
         })
         .then(function (response) {
-            // if (response) {
-            //     setTitle("");
-            //     setContent("");
-            //     setStatus("");
-            //     setSequence(s => [...s + 1]);
-            //     setId("");
-            // }
+            console.log(response.data);
+            if (response.data) {
+                setTitle("");
+                setContent("");
+                setStatus("");
+                setId("");
+            }
+            
+        })
+        .catch(function (error) {
+           // setErrors(error.response.data.errors);
+        });
+        setSequence(s => s + 1);
+        currentSequence(sequence);
+       
+    }
+
+    const HandleRemoveTask = (id) => {
+        Axios.delete(`${destroyTaskUrl}/`+id)
+        .then(function (response) {
+            console.log(response.data);
+            setSequence(s => s + 1);
+            currentSequence(sequence);
+            
         })
         .catch(function (error) {
            // setErrors(error.response.data.errors);
         });
     }
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setId(taskInfo.id);
+            setTitle(taskInfo.title);
+            setContent(taskInfo.content);
+            setStatus(taskInfo.status);
+        }, 100);
+        return () => clearTimeout(timeout);
+    }, [taskInfo]);
+
+    useEffect(() => {
+        const taskRemove = setTimeout(() => {
+            HandleRemoveTask(removeTaskId);
+        }, 100);
+        return () => clearTimeout(taskRemove);
+    }, [removeTaskId]);
 
     return (
         <>
@@ -87,7 +129,6 @@ export default function Form({ datatableurl, storeUrl }: FormProps) {
                     </div>
                 </div>
            </div>
-           <Datatable datatableurl={datatableurl} currentSequence={sequence}/>
         </>
     );
 }

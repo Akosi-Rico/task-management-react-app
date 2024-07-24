@@ -3,14 +3,21 @@ import Axios from "axios";
 import DataTable,{ defaultThemes }  from "react-data-table-component";
 
 interface LoadProps {
-    datatableurl: string,
-    currentSequence: number
+    datatableurl: string;
+    currentSequence: number;
+    currentInfo: (data) => void;
+    currentremoveTaskId:(data) =>void;
 }
 
-export default function Datatable({ datatableurl, currentSequence }: LoadProps) {
+export default function Datatable({ datatableurl, currentSequence, currentInfo, currentremoveTaskId }: LoadProps) {
     const [rows, setRows] = useState([]);
     const [pending, setPending] = useState(true);
-    
+
+    const statusInfo = {
+        0: "Inactive",
+        1: "Publish",
+        2: "Archived",
+    }
     const columns = [
         {
             name: "TITLE",
@@ -24,14 +31,16 @@ export default function Datatable({ datatableurl, currentSequence }: LoadProps) 
         },
         {
             name: "STATUS",
-            selector: row => row.status_id,
+            selector: row => statusInfo[row.status_id],
             sortable: true,
         },
         {
             name: "ACTION",
             cell: (row) => [
-                <button key={`edit-button-${row.id}`}  className="warning-button">Edit</button>,
-                <button key={`delete-button-${row.id}`}  className="danger-button">Delete</button>
+                <div  key={`cc-button-${row.id}`} className="flex md:flex-row xs:flex-col w-full px-2 py-2">
+                    <button key={`edit-button-${row.id}`}  className="warning-button" onClick={() => handleCurrentInfo(row) }>Edit</button>
+                    <button key={`delete-button-${row.id}`}  className="danger-button" onClick={() => handleRemoveTask(row.id) }>Delete</button>
+                </div>
             ],
           }
     ];
@@ -45,9 +54,17 @@ export default function Datatable({ datatableurl, currentSequence }: LoadProps) 
                     setPending(false);
                 }
             });
-        }, 700);
+        }, 200);
         return () => clearTimeout(timeout);
     }, [currentSequence]);
+
+    const handleCurrentInfo = (data) => {
+        currentInfo(data);
+    }
+
+    const handleRemoveTask = (id) => {
+        currentremoveTaskId(id);
+    }
 
     return (<>
          <div className="flex flex-col border border-solid my-1">
@@ -98,7 +115,7 @@ export default function Datatable({ datatableurl, currentSequence }: LoadProps) 
                 }
                 highlightOnHover
 		        pointerOnHover
-              //  dense
+                dense
                 pagination/>
         </div>
     </>);
