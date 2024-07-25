@@ -1,1 +1,1 @@
-import "./components/main";
+import "./components/main.tsx";
