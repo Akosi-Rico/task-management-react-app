@@ -9,7 +9,7 @@ class TaskController extends Controller
 {
     public function index()
     {
-        return view("modules.main");
+        return view("modules.index");
     }
 
     public function store(TaskRequest $request)

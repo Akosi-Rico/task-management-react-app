@@ -3,9 +3,10 @@ import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
     RouterProvider,
-  } from "react-router-dom";
+} from "react-router-dom";
 import HomePage from "./app.tsx";
 import LoginPage from "./login.tsx";
+import RegisterPage from "./register.tsx";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +19,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <LoginPage/>
+        element: <LoginPage imagePath={publicImagePath} />
+    },
+    {
+        path: "/login/register",
+        element: <RegisterPage imagePath={publicImagePath} />
     },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);

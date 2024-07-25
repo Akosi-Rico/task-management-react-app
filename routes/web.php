@@ -8,3 +8,4 @@ Route::resource("/task", TaskController::class);
 Route::get("/load/datatable", [TaskController::class, "loadTable"])->name("load.datatable");
 
 Route::get("/login", [LoginController::class, 'login'])->name("login");
+Route::get("/login/register", [LoginController::class, 'login'])->name("login.register");
