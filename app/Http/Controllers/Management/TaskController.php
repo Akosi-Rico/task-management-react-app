@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Management;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Manage\TaskRequest;
 use App\Models\Manage\Task;
 class TaskController extends Controller
 {
@@ -12,30 +12,9 @@ class TaskController extends Controller
         return view("modules.main");
     }
 
-    public function create()
+    public function store(TaskRequest $request)
     {
-        //
-    }
-
-    public function store()
-    {
-      return Task::createOrUpdateTask(request()["payload"]);
-    }
-
-   
-    public function show(string $id)
-    {
-        //
-    }
-
-    public function edit(string $id)
-    {
-        //
-    }
-
-    public function update(Request $request, string $id)
-    {
-        //
+        return Task::createOrUpdateTask(request()["payload"]);
     }
 
     public function destroy(string $id)

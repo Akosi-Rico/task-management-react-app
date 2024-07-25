@@ -68,3 +68,15 @@
     focus:ring-red-800
     focus:ring-opacity-50
 }
+
+.error-field {
+    @apply border-red-500;
+}
+
+.error-text {
+    @apply text-sm font-sans text-red-600;
+}
+
+.error-text-unknown {
+    @apply text-sm font-sans text-slate-100;
+}
