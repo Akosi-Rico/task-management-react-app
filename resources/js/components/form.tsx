@@ -39,7 +39,7 @@ export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId,
     }
 
     const SubmiData = () => {
-       Axios.post(`${storeUrl}`, {
+        Axios.post(`${storeUrl}`, {
             payload: {
                 id: id,
                 title: title,

@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/login/register",
-        element: <RegisterPage imagePath={publicImagePath} />
+        element: <RegisterPage imagePath={publicImagePath}  registerUserUrl={registerUserUrl} />
     },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
