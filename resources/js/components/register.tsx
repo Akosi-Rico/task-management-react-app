@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 interface LoadProps {
     imagePath: string;
-    registerUserUrl: number;
+    registerUserUrl: string;
 }
 
 export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps) {
@@ -192,6 +192,9 @@ export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps)
                             <button className="danger-button mx-1" onClick={() => handleUserAccount()}>
                                 Register
                             </button>
+                            <Link className="warning-button mx-1" to="/login">
+                                Back To Login
+                            </Link>
                         </section>
                     </div>
                 </div>

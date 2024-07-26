@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from 'react-router-dom';
 interface LoadProps {
     imagePath: string
 }
@@ -36,9 +36,9 @@ export default function LoginForm({ imagePath } : LoadProps) {
                             <button className="primary-button mx-1">
                                 Login
                             </button>
-                            <button className="warning-button mx-1">
+                            <Link className="warning-button mx-1" to="/login/register">
                                 Register
-                            </button>
+                            </Link>
                         </section>
                     </div>
                 </div>
