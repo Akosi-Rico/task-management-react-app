@@ -15,6 +15,8 @@ use App\Helpers\Manage\TaskHelper;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, TaskHelper;
+    
+    protected $guard_name = "web";
 
     protected $fillable = [
         'name',
@@ -43,15 +45,37 @@ class User extends Authenticatable
                     return false;
                 }
 
-                self::create([
+                $user = self::create([
                     "name" => $request['name'],
                     "email" => $request['email'],
                     "password" => Hash::make($request['password']),
                 ]);
+
+                if (!empty($user)) {
+                    auth()->attempt(["email" => $request['email'], "password" => $request['password']]);
+                }
                 
             DB::commit();
             return self::loadResponse("Successfully", Response::HTTP_OK, new JsonOutput);
         } catch (\Throwable $th) {
+            return self::loadResponse($th->getMessage(), Response::HTTP_BAD_REQUEST, new JsonOutput);
+        }
+    }
+
+    public static function login($request) 
+    {
+        try {
+            if (empty($request)) {
+                return false;
+            }
+
+            auth()->attempt(["email" => $request["email"], "password" => $request["password"]]);
+            if (empty(auth()->check())) {
+                throw new \Exception("Email & Password given is not registered");
+            }
+
+           return self::loadResponse("Successfully Login!", Response::HTTP_OK, new JsonOutput);
+        } catch(\Throwable $th) {
             return self::loadResponse($th->getMessage(), Response::HTTP_BAD_REQUEST, new JsonOutput);
         }
     }

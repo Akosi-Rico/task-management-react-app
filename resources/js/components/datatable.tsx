@@ -1,15 +1,17 @@
 import React,  { useState, useEffect } from "react";
 import Axios from "axios";
 import DataTable,{ defaultThemes }  from "react-data-table-component";
-
+import {
+    useDataTableUrlContext,
+} from "./UseContext/context.ts";
 interface LoadProps {
-    datatableurl: string;
     currentSequence: number;
     currentInfo: (data) => void;
     currentremoveTaskId:(data) =>void;
 }
 
-export default function Datatable({ datatableurl, currentSequence, currentInfo, currentremoveTaskId }: LoadProps) {
+export default function Datatable({ currentSequence, currentInfo, currentremoveTaskId }: LoadProps) {
+    const datatableurl = useDataTableUrlContext()
     const [rows, setRows] = useState([]);
     const [pending, setPending] = useState(true);
 

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import {
+    useTaskStoreUrlContext,
+    useTaskDestroyUrlContext,
+} from "./UseContext/context.ts";
 interface FormProps {
-    storeUrl: string;
     currentSequence: (data) => void;
     taskInfo: {
         id: number;
@@ -10,10 +13,11 @@ interface FormProps {
         status: string;
     },
     removeTaskId: number;
-    destroyTaskUrl: string;
 }
 
-export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId, destroyTaskUrl }: FormProps) {
+export default function Form({ currentSequence, taskInfo, removeTaskId }: FormProps) {
+    const storeUrl = useTaskStoreUrlContext();
+    const destroyTaskUrl = useTaskDestroyUrlContext();
     const [id, setId] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -21,6 +25,7 @@ export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId,
     const [sequence, setSequence] = useState(0);
     const [unknownError, setUnknownError] = useState("");
     const [errors, setErrors] = useState({"payload.title": "", "payload.task": "", "payload.status": ""});
+    const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content');
 
     const setTitleValue = (event) => {
         setTitle(event.target.value);
@@ -38,6 +43,15 @@ export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId,
         setErrors(e => ({ ...e, "payload.title": title,  "payload.task": task, "payload.status": status }));
     }
 
+    const handleClearState = () => {
+        setTitle("");
+        setContent("");
+        setStatus("");
+        setId("");
+        setUnknownError("");
+        setErrorDetail();
+    }
+
     const SubmiData = () => {
         Axios.post(`${storeUrl}`, {
             payload: {
@@ -46,17 +60,18 @@ export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId,
                 task: content,
                 status: status
             },
-        })
+            _token: csrfToken,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }
+        )
         .then(function (response) {
             if (response.data) {
                 setSequence(s => s + 1);
                 currentSequence(sequence);
-                setTitle("");
-                setContent("");
-                setStatus("");
-                setId("");
-                setUnknownError("");
-                setErrorDetail();
+                handleClearState();
             }
         })
         .catch(function (error) {
@@ -66,7 +81,8 @@ export default function Form({storeUrl, currentSequence, taskInfo, removeTaskId,
                     error.response.data.errors["payload.task"],
                     error.response.data.errors["payload.status"]);
             } else {
-                setUnknownError(error.response.data.message)
+                setUnknownError(error.response.data.message);
+                setErrorDetail();
             }
         });
     }

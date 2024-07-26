@@ -9,7 +9,12 @@ class TaskController extends Controller
 {
     public function index()
     {
-        return view("modules.index");
+       //auth()->guard()->logout();
+        $data = [
+            "name" => auth()->user()->name,
+            "currentDate" => now()->format('F j, Y'),
+        ];
+        return view("modules.task", compact('data'));
     }
 
     public function store(TaskRequest $request)
@@ -25,5 +30,13 @@ class TaskController extends Controller
     public function loadTable() 
     {
         return Task::loadDataTableData();
+    }
+
+    public function loadUserInfo()
+    {
+        return [
+            "name" => auth()->user()->name,
+            "currentDate" => now()->format('F j, Y'),
+        ];
     }
 }

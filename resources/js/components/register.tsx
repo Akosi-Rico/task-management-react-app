@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import Axios from "axios";
 import { Link } from 'react-router-dom';
-interface LoadProps {
-    imagePath: string;
-    registerUserUrl: string;
-}
+import {
+    usePublicPathImageContext,
+    useRegisterUserUrlContext,
+    useTaskIndexUrlContext,
+} from "./UseContext/context.ts";
 
-export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps) {
+export default function RegisterPage() {
+    const path = usePublicPathImageContext();
+    const registerUserUrl = useRegisterUserUrlContext();
+    const taskIndexUrl = useTaskIndexUrlContext();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -31,15 +35,6 @@ export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps)
         setConfirmPassword(event.target.value);
     }
 
-    const handleClearState = () => {
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setUnknownError("");
-        setErrorDetail();
-    }
-
     const setErrorDetail = (email = null, name = null, password = null) => {
         setErrors(e => ({ ...e, "payload.email": email,  "payload.name": name, "payload.password": password }));
     }
@@ -60,8 +55,8 @@ export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps)
           }
         )
         .then(function (response) {
-            if (response.data) {
-                handleClearState();
+            if (response.status == 200) {
+                location.href = taskIndexUrl;
             }
         })
         .catch(function (error) {
@@ -82,7 +77,7 @@ export default function RegisterPage({ imagePath, registerUserUrl } : LoadProps)
             <div className="flex bg-slate-100 justify-center overflow-hidden">
                 <div className="flex flex-col bg-slate-200 w-svw  xs:h-3/4 h-svh md:w-1/2 my-20 sm:mx-12 shadow-md rounded-xl static">
                     <div className="flex justify-center items-center relative top-[-65px]">
-                        <img src={ imagePath +"/image/logo.png" } className="w-36 h-36 rounded-full bg-slate-300 "/>
+                        <img src={ path +"/image/logo.png" } className="w-36 h-36 rounded-full bg-slate-300 "/>
                     </div>
                     <div className="justify-center items-center sm:flex xs:flex-col text-center">
                         {
