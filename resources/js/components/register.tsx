@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import Axios from "axios";
 import { Link } from 'react-router-dom';
-import {
-    usePublicPathImageContext,
-    useRegisterUserUrlContext,
-    useTaskIndexUrlContext,
-} from "./UseContext/context.ts";
+import { useRoute } from 'ziggy-js';
+import { usePublicPathImageContext } from "./UseContext/context.ts";
 
 export default function RegisterPage() {
+    const route = useRoute();
     const path = usePublicPathImageContext();
-    const registerUserUrl = useRegisterUserUrlContext();
-    const taskIndexUrl = useTaskIndexUrlContext();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -40,7 +36,7 @@ export default function RegisterPage() {
     }
     
     const handleUserAccount = () => {
-        Axios.post(`${registerUserUrl}`, {
+        Axios.post(route("login.register.user"), {
             payload: {
                 name: name,
                 email: email,
@@ -56,7 +52,7 @@ export default function RegisterPage() {
         )
         .then(function (response) {
             if (response.status == 200) {
-                location.href = taskIndexUrl;
+                location.href = route("task.index");
             }
         })
         .catch(function (error) {

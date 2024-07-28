@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import {
-    useTaskStoreUrlContext,
-    useTaskDestroyUrlContext,
-} from "./UseContext/context.ts";
+import { useRoute } from 'ziggy-js';
 interface FormProps {
     currentSequence: (data) => void;
     taskInfo: {
@@ -16,8 +13,7 @@ interface FormProps {
 }
 
 export default function Form({ currentSequence, taskInfo, removeTaskId }: FormProps) {
-    const storeUrl = useTaskStoreUrlContext();
-    const destroyTaskUrl = useTaskDestroyUrlContext();
+    const route = useRoute();
     const [id, setId] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -53,7 +49,7 @@ export default function Form({ currentSequence, taskInfo, removeTaskId }: FormPr
     }
 
     const SubmiData = () => {
-        Axios.post(`${storeUrl}`, {
+        Axios.post(route("task.store"), {
             payload: {
                 id: id,
                 title: title,
@@ -89,7 +85,7 @@ export default function Form({ currentSequence, taskInfo, removeTaskId }: FormPr
 
     const HandleRemoveTask = (id) => {
         if (id) {
-            Axios.delete(`${destroyTaskUrl}/`+id)
+            Axios.delete(route("task.destroy", id))
             .then(function (response) {
                 if (response.data) {
                     setSequence(s => s + 1);

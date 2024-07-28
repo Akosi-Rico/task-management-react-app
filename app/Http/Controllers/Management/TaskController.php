@@ -9,7 +9,6 @@ class TaskController extends Controller
 {
     public function index()
     {
-       //auth()->guard()->logout();
         $data = [
             "name" => auth()->user()->name,
             "currentDate" => now()->format('F j, Y'),

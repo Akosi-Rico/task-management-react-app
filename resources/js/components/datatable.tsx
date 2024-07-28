@@ -1,9 +1,7 @@
 import React,  { useState, useEffect } from "react";
 import Axios from "axios";
-import DataTable,{ defaultThemes }  from "react-data-table-component";
-import {
-    useDataTableUrlContext,
-} from "./UseContext/context.ts";
+import DataTable, { defaultThemes }  from "react-data-table-component";
+import { useRoute } from 'ziggy-js';
 interface LoadProps {
     currentSequence: number;
     currentInfo: (data) => void;
@@ -11,7 +9,7 @@ interface LoadProps {
 }
 
 export default function Datatable({ currentSequence, currentInfo, currentremoveTaskId }: LoadProps) {
-    const datatableurl = useDataTableUrlContext()
+    const route = useRoute();
     const [rows, setRows] = useState([]);
     const [pending, setPending] = useState(true);
 
@@ -49,14 +47,14 @@ export default function Datatable({ currentSequence, currentInfo, currentremoveT
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            Axios.get(`${datatableurl}`)
+            Axios.get(route("load.datatable"))
             .then(function (response) {
-                if (response) {
-                    setRows(response.data.resultset);
+                if (response.status == 200) {
+                    setRows(response.data.message);
                     setPending(false);
                 }
             });
-        }, 200);
+        }, 400);
         return () => clearTimeout(timeout);
     }, [currentSequence]);
 

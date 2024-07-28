@@ -1,22 +1,18 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
+import { useRoute } from 'ziggy-js';
 import Axios from "axios";
-import {
-    usePublicPathImageContext,
-    useLoginProcessUrlContext,
-    useTaskIndexUrlContext,
-} from "./UseContext/context.ts";
+import { usePublicPathImageContext } from "./UseContext/context.ts";
 
 export default function LoginForm() {
+    const route = useRoute();
     const path = usePublicPathImageContext();
-    const loginUrl = useLoginProcessUrlContext();
-    const taskIndexUrl = useTaskIndexUrlContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [unknownError, setUnknownError] = useState("");
     const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content');
     const [errors, setErrors] = useState({"payload.email": "", "payload.password": ""});
-
+   
     const handleEmail = (event) => {
         setEmail(event.target.value);
     }
@@ -30,7 +26,7 @@ export default function LoginForm() {
     }
 
     const handleLoginProcess = () => {
-        Axios.post(`${loginUrl}`, {
+        Axios.post(route("login.process"), {
             payload: {
                 email: email,
                 password: password,
@@ -44,7 +40,7 @@ export default function LoginForm() {
         )
         .then(function (response) {
             if (response.status == 200) {
-                location.href = taskIndexUrl;
+                location.href = route("task.index");
             }
         })
         .catch(function (error) {

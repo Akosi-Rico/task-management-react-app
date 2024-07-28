@@ -1,25 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
+import { useRoute } from 'ziggy-js';
 
 import {
     usePublicPathImageContext,
-    useUserInfoContext,
-    useLoginUrlContext,
-    useLogoutUrlContext,
-    useUserInfoUrlContext
 } from "./UseContext/context.ts";
 
 export default function Navigation() {
+    const route = useRoute();
     const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).getAttribute('content');
     const path = usePublicPathImageContext();
-    const userInfoUrl = useUserInfoUrlContext();
-
-    const loginUrl = useLoginUrlContext();
-    const logoutUrl = useLogoutUrlContext();
-
     const [user, setUser] = useState({ name: "", currentDate: ""});
     const handleUserLogout = () => {
-        Axios.post(`${logoutUrl}`, {
+        Axios.post(route("user.logout"), {
             _token: csrfToken,
           }, {
             headers: {
@@ -29,14 +22,14 @@ export default function Navigation() {
         )
         .then(function (response) {
             if (response.status == 200) {
-                location.href = loginUrl;
+                location.href = route("login");
             }
         });
     }
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            Axios.get(`${userInfoUrl}`)
+            Axios.get(route("user.info"))
             .then(function (response) {
                 if (response.status == 200) {
                     setUser(u =>({...u, name: response.data.name, currentDate: response.data.currentDate}));

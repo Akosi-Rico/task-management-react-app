@@ -16,10 +16,10 @@ class Task extends Model
     public static function loadDataTableData()
     {
         try {
-            $data = self::select("id", "title", "content", "status_id")->get();
-            return response([
-                "resultset" => $data,
-            ], Response::HTTP_OK);
+            $data = self::select("id", "title", "content", "status_id")
+                        ->where("user_id", auth()->user()->id)
+                        ->get();
+            return self::loadResponse($data, Response::HTTP_OK, new JsonOutput);
         } catch(\Throwable $th) {
             return self::loadResponse($th->getMessage(), Response::HTTP_BAD_REQUEST, new JsonOutput);
         }
@@ -41,7 +41,7 @@ class Task extends Model
                 $task->title = $request['title'];
                 $task->content = $request['task'];
                 $task->status_id = $request['status'];
-                $task->user_id = 0;
+                $task->user_id = auth()->user()->id;
                 $task->save();
 
             DB::commit();
